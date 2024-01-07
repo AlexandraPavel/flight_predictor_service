@@ -7,12 +7,14 @@ do
     
 done
 
-until python3 ./manage.py migrate
-do
-    echo "Waiting for database to be ready..."
-    sleep 2
-done
+# python3 ./manage.py showmigrations
 
-python3 ./manage.py collectstatic --noinput
+# until python3 ./manage.py migrate
+# do
+#     echo "Waiting for database to be ready..."
+#     sleep 2
+# done
 
-gunicorn server.wsgi --bind 0.0.0.0:8000 --workers 4 --threads 4
+# python3 ./manage.py collectstatic --noinput
+
+gunicorn server.wsgi --bind 0.0.0.0:8000 --workers 8 --threads 8

@@ -15,14 +15,15 @@ class RandomForestClassifier:
         input_data.fillna(self.values_fill_missing)
         # convert categoricals
         for column in [
-            "workclass",
-            "education",
-            "marital-status",
-            "occupation",
-            "relationship",
-            "race",
-            "sex",
-            "native-country",
+            'date_of_enquiry',
+            'departure',
+            'destination',
+            'flight_date',
+            'flight_time',
+            'arrival_time',
+            'airline',
+            'layovers',
+            'flight_duration',
         ]:
             categorical_convert = self.encoders[column]
             input_data[column] = categorical_convert.transform(input_data[column])
