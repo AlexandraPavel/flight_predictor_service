@@ -1,5 +1,6 @@
 # Machine Learning Models with Django
 Requirements:
+
 	Ubuntu Jammy Jellyfish 22.04
  	Docker Desktop
 
