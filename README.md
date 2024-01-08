@@ -1,4 +1,7 @@
 # Machine Learning Models with Django
+Requirements:
+	Ubuntu Jammy Jellyfish 22.04
+ 	Docker Desktop
 
 Put more memory in the docker desktop settings in order to train the model:
 
