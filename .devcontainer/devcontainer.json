@@ -9,8 +9,6 @@
 	],
 	"service": "wsgiserver",
 
-	// "dockerFile": "Dockerfile",
-
 	// "runArgs": [
 	// 	"--gpus=all"
 	// ],
