@@ -1,50 +1,22 @@
-FROM ubuntu:xenial
-# FROM python:latest
-# FROM ubuntu:latest
-
-# Set DEBIAN_FRONTEND to avoid debconf frontend errors
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libncurses5-dev \
-    libncursesw5-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    libgdbm-dev \
-    libdb5.3-dev \
-    libbz2-dev \
-    libexpat1-dev \
-    liblzma-dev \
-    tk-dev \
-    wget \
-    curl \
-    && cd /tmp \
-    && wget https://www.python.org/ftp/python/3.6.15/Python-3.6.15.tgz \
-    && tar -xf Python-3.6.15.tgz \
-    && cd Python-3.6.15 \
-    && ./configure --enable-optimizations \
-    && make -j$(nproc) \
-    && make install \
-    && cd /tmp \
-    && rm -rf Python-3.6.15* \
-    && apt-get clean \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
-    # python3.6 python3.6-dev python3-pip
+FROM alpine:3.16.0
 
 WORKDIR /app
-COPY requirements.txt .
-RUN rm -f /usr/bin/python && ln -s /usr/bin/python3.6 /usr/bin/python
-RUN rm -f /usr/bin/python3 && ln -s /usr/bin/python3.6 /usr/bin/python3
 
-RUN pip3 install -r requirements.txt
-# RUN pip3 install gunicorn==19.9.0
+RUN set -xe;
+
+COPY . .
+# --no-cache
+RUN apk add python3 py3-pip tini; \
+    pip install --upgrade pip setuptools-scm; \
+    apk add build-base python3-dev libffi-dev openssl-dev zlib-dev libgcc; \
+    apk add bash; \
+    addgroup -g 1000 appuser; \
+    adduser -u 1000 -G appuser -D -h /app appuser; \
+    chown -R appuser:appuser /app
+
+COPY requirements.txt requirements.txt
+RUN pip install  -r requirements.txt
+# --no-cache-dir
 
 ADD ./backend /app/backend
 ADD ./docker /app/docker
