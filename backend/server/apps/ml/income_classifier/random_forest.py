@@ -10,7 +10,7 @@ class RandomForestClassifier:
         self.model = joblib.load(path_to_artifacts + "random_forest.joblib")
 
     def preprocessing(self, input_data):
-        # JSON to pandas DataFrame
+        
         input_data = pd.DataFrame(input_data, index=[0])
         # fill missing values
         input_data.fillna(self.values_fill_missing)
