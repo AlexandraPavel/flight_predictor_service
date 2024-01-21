@@ -1,6 +1,9 @@
 from django.test import TestCase
 
 from apps.ml.income_classifier.random_forest import RandomForestClassifier
+from apps.ml.income_classifier.flight_predictor_rfr import RandomForestRegression
+from apps.ml.income_classifier.flight_predictor_xgb import XGBRegression
+from apps.ml.income_classifier.flight_predictor_dl import DLRegression
 import inspect
 from apps.ml.registry import MLRegistry
 # from apps.ml.income_classifier.extra_trees import ExtraTreesClassifier
@@ -22,22 +25,69 @@ class MLTests(TestCase):
             # "capital-loss": 0,
             # "hours-per-week": 68,
             # "native-country": "United-States"
-            'date_of_enquiry': '2023-01-20',
-            'departure': 'Bucharest',
-            'destination': 'Uganda',
-            'flight_date': '2020-02-03',
-            'flight_time': '14:00',
-            'arrival_time': '18:00',
-            'airline': 'AF',
-            'layovers': 0,
-            'flight_duration': 90
+            'departure': 'Bucuresti',
+            'destination': 'Atena',
+            'flight_date': '23-12-2023',
+            'arrival_date': '29-12-2023'
         }
-        my_alg = RandomForestClassifier()
+        my_alg = RandomForestRegression()
         response = my_alg.compute_prediction(input_data)
+        print(response)
         self.assertEqual('OK', response['status'])
-        self.assertTrue('label' in response)
-        self.assertEqual('<=50K', response['label'])
+        #self.assertTrue('label' in response)
+        #[self.assertEqual('<=50K', response['label'])
 
+    def test_xgb_algorithm(self):
+        input_data = {
+            # "age": 37,
+            # "workclass": "Private",
+            # "fnlwgt": 34146,
+            # "education": "HS-grad",
+            # "education-num": 9,
+            # "marital-status": "Married-civ-spouse",
+            # "occupation": "Craft-repair",
+            # "relationship": "Husband",
+            # "race": "White",
+            # "sex": "Male",
+            # "capital-gain": 0,
+            # "capital-loss": 0,
+            # "hours-per-week": 68,
+            # "native-country": "United-States"
+            'departure': 'Bucuresti',
+            'destination': 'Atena',
+            'flight_date': '23-12-2023',
+            'arrival_date': '29-12-2023'
+        }
+        my_alg = XGBRegression()
+        response = my_alg.compute_prediction(input_data)
+        print(response)
+        self.assertEqual('OK', response['status'])
+    
+    def test_dl_algorithm(self):
+        input_data = {
+            # "age": 37,
+            # "workclass": "Private",
+            # "fnlwgt": 34146,
+            # "education": "HS-grad",
+            # "education-num": 9,
+            # "marital-status": "Married-civ-spouse",
+            # "occupation": "Craft-repair",
+            # "relationship": "Husband",
+            # "race": "White",
+            # "sex": "Male",
+            # "capital-gain": 0,
+            # "capital-loss": 0,
+            # "hours-per-week": 68,
+            # "native-country": "United-States"
+            'departure': 'Bucuresti',
+            'destination': 'Atena',
+            'flight_date': '23-12-2023',
+            'arrival_date': '29-12-2023'
+        }
+        my_alg = DLRegression()
+        response = my_alg.compute_prediction(input_data)
+        print(response)
+        self.assertEqual('OK', response['status'])
     # def test_et_algorithm(self):
     #     input_data = {
     #         "age": 37,
@@ -64,14 +114,14 @@ class MLTests(TestCase):
     def test_registry(self):
         registry = MLRegistry()
         self.assertEqual(len(registry.endpoints), 0)
-        endpoint_name = "income_classifier"
-        algorithm_object = RandomForestClassifier()
+        endpoint_name = "flight"
+        algorithm_object = RandomForestRegression()
         algorithm_name = "random forest"
         algorithm_status = "production"
         algorithm_version = "0.0.3"
-        algorithm_owner = "Piotr"
-        algorithm_description = "Random Forest with simple pre- and post-processing"
-        algorithm_code = inspect.getsource(RandomForestClassifier)
+        algorithm_owner = "Mircea"
+        algorithm_description = "Flight random forest"
+        algorithm_code = inspect.getsource(RandomForestRegression)
         # add to registry
         registry.add_algorithm(endpoint_name, algorithm_object, algorithm_name,
                     algorithm_status, algorithm_version, algorithm_owner,

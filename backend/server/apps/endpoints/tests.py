@@ -20,17 +20,70 @@ class EndpointTests(TestCase):
             # "capital-loss": 0,
             # "hours-per-week": 68,
             # "native-country": "United-States"
-            'date_of_enquiry',
             'departure',
             'destination',
             'flight_date',
-            'flight_time',
-            'arrival_time',
-            'airline',
-            'layovers',
-            'flight_duration',
+            'arrival_date',
         }
-        classifier_url = "/api/v1/income_classifier/predict"
+        classifier_url = "/api/v1/flight/predict"
+        response = client.post(classifier_url, input_data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["label"], "<=50K")
+        self.assertTrue("request_id" in response.data)
+        self.assertTrue("status" in response.data)
+
+    def test_predict_view2(self):
+        client = APIClient()
+        input_data = {
+            # "age": 37,
+            # "workclass": "Private",
+            # "fnlwgt": 34146,
+            # "education": "HS-grad",
+            # "education-num": 9,
+            # "marital-status": "Married-civ-spouse",
+            # "occupation": "Craft-repair",
+            # "relationship": "Husband",
+            # "race": "White",
+            # "sex": "Male",
+            # "capital-gain": 0,
+            # "capital-loss": 0,
+            # "hours-per-week": 68,
+            # "native-country": "United-States"
+            'departure',
+            'destination',
+            'flight_date',
+            'arrival_date',
+        }
+        classifier_url = "/api/v1/flight_xgboost/predict"
+        response = client.post(classifier_url, input_data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["label"], "<=50K")
+        self.assertTrue("request_id" in response.data)
+        self.assertTrue("status" in response.data)
+    
+    def test_predict_view3(self):
+        client = APIClient()
+        input_data = {
+            # "age": 37,
+            # "workclass": "Private",
+            # "fnlwgt": 34146,
+            # "education": "HS-grad",
+            # "education-num": 9,
+            # "marital-status": "Married-civ-spouse",
+            # "occupation": "Craft-repair",
+            # "relationship": "Husband",
+            # "race": "White",
+            # "sex": "Male",
+            # "capital-gain": 0,
+            # "capital-loss": 0,
+            # "hours-per-week": 68,
+            # "native-country": "United-States"
+            'departure',
+            'destination',
+            'flight_date',
+            'arrival_date',
+        }
+        classifier_url = "/api/v1/flight_dl/predict"
         response = client.post(classifier_url, input_data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["label"], "<=50K")
