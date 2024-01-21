@@ -1,7 +1,8 @@
 Django
 django-filter
 djangorestframework
-# scikit-learn
+django-bootstrap3
+scikit-learn=1.2.2
 Markdown
 requests
 joblib
