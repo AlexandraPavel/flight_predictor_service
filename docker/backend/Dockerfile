@@ -7,15 +7,17 @@ RUN set -xe;
 COPY . .
 # --no-cache
 RUN apk add python3 py3-pip tini; \
-    pip install --upgrade pip setuptools-scm; \
-    apk add build-base python3-dev libffi-dev openssl-dev zlib-dev libgcc; \
+    pip install --upgrade pip3 setuptools-scm; \
+    apk add build-base python3-dev libffi-dev openssl-dev zlib-dev libgcc gfortran; \
     apk add bash; \
-    addgroup -g 1000 appuser; \
-    adduser -u 1000 -G appuser -D -h /app appuser; \
-    chown -R appuser:appuser /app
+    apk add py3-scikit-learn;
+    # addgroup -g 1000 appuser; \
+    # adduser -u 1000 -G appuser -D -h /app appuser; \
+    # chown -R appuser:appuser /app
 
 COPY requirements.txt requirements.txt
-RUN pip install  -r requirements.txt
+RUN pip3 install  -r requirements.txt
+RUN pip3 install scikit-learn
 # --no-cache-dir
 
 ADD ./backend /app/backend
