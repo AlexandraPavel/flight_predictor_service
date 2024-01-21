@@ -1,4 +1,5 @@
 import joblib
+import pickle
 import pandas as pd
 
 class RandomForestClassifier:
