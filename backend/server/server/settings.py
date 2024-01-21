@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework', # add django rest framework
-    # apps
+    'bootstrap3',
     'apps.endpoints',
     'apps.ml'
 ]

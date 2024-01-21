@@ -26,6 +26,7 @@ class EndpointTests(TestCase):
             'arrival_date',
         }
         classifier_url = "/api/v1/flight/predict"
+<<<<<<< HEAD
         response = client.post(classifier_url, input_data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["label"], "<=50K")
@@ -84,6 +85,8 @@ class EndpointTests(TestCase):
             'arrival_date',
         }
         classifier_url = "/api/v1/flight_dl/predict"
+=======
+>>>>>>> main
         response = client.post(classifier_url, input_data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["label"], "<=50K")
