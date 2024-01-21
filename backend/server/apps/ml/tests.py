@@ -2,6 +2,11 @@ from django.test import TestCase
 
 from apps.ml.income_classifier.random_forest import RandomForestClassifier
 from apps.ml.income_classifier.flight_predictor_rfr import RandomForestRegression
+<<<<<<< HEAD
+from apps.ml.income_classifier.flight_predictor_xgb import XGBRegression
+from apps.ml.income_classifier.flight_predictor_dl import DLRegression
+=======
+>>>>>>> main
 import inspect
 from apps.ml.registry import MLRegistry
 # from apps.ml.income_classifier.extra_trees import ExtraTreesClassifier
@@ -35,6 +40,57 @@ class MLTests(TestCase):
         #self.assertTrue('label' in response)
         #[self.assertEqual('<=50K', response['label'])
 
+    def test_xgb_algorithm(self):
+        input_data = {
+            # "age": 37,
+            # "workclass": "Private",
+            # "fnlwgt": 34146,
+            # "education": "HS-grad",
+            # "education-num": 9,
+            # "marital-status": "Married-civ-spouse",
+            # "occupation": "Craft-repair",
+            # "relationship": "Husband",
+            # "race": "White",
+            # "sex": "Male",
+            # "capital-gain": 0,
+            # "capital-loss": 0,
+            # "hours-per-week": 68,
+            # "native-country": "United-States"
+            'departure': 'Bucuresti',
+            'destination': 'Atena',
+            'flight_date': '23-12-2023',
+            'arrival_date': '29-12-2023'
+        }
+        my_alg = XGBRegression()
+        response = my_alg.compute_prediction(input_data)
+        print(response)
+        self.assertEqual('OK', response['status'])
+    
+    def test_dl_algorithm(self):
+        input_data = {
+            # "age": 37,
+            # "workclass": "Private",
+            # "fnlwgt": 34146,
+            # "education": "HS-grad",
+            # "education-num": 9,
+            # "marital-status": "Married-civ-spouse",
+            # "occupation": "Craft-repair",
+            # "relationship": "Husband",
+            # "race": "White",
+            # "sex": "Male",
+            # "capital-gain": 0,
+            # "capital-loss": 0,
+            # "hours-per-week": 68,
+            # "native-country": "United-States"
+            'departure': 'Bucuresti',
+            'destination': 'Atena',
+            'flight_date': '23-12-2023',
+            'arrival_date': '29-12-2023'
+        }
+        my_alg = DLRegression()
+        response = my_alg.compute_prediction(input_data)
+        print(response)
+        self.assertEqual('OK', response['status'])
     # def test_et_algorithm(self):
     #     input_data = {
     #         "age": 37,
@@ -65,7 +121,11 @@ class MLTests(TestCase):
         algorithm_object = RandomForestRegression()
         algorithm_name = "random forest"
         algorithm_status = "production"
+<<<<<<< HEAD
+        algorithm_version = "0.0.3"
+=======
         algorithm_version = "0.0.1"
+>>>>>>> main
         algorithm_owner = "Mircea"
         algorithm_description = "Flight random forest"
         algorithm_code = inspect.getsource(RandomForestRegression)

@@ -9,6 +9,8 @@ import inspect
 from apps.ml.registry import MLRegistry
 from apps.ml.income_classifier.random_forest import RandomForestClassifier
 from apps.ml.income_classifier.flight_predictor_rfr import RandomForestRegression
+from apps.ml.income_classifier.flight_predictor_xgb import XGBRegression
+from apps.ml.income_classifier.flight_predictor_dl import DLRegression
 # from apps.ml.income_classifier.extra_trees import ExtraTreesClassifier # import ExtraTrees ML algorithm
 
 try:
@@ -24,6 +26,28 @@ try:
                             owner="Mircea",
                             algorithm_description="Flight random forest",
                             algorithm_code=inspect.getsource(RandomForestRegression))
+    
+    xgb = XGBRegression()
+    # add to ML registry
+    registry.add_algorithm(endpoint_name="flight_xgboost",
+                            algorithm_object=xgb,
+                            algorithm_name="XGB",
+                            algorithm_status="production",
+                            algorithm_version="0.0.1",
+                            owner="Mircea",
+                            algorithm_description="Flight XGBoosting",
+                            algorithm_code=inspect.getsource(XGBRegression))
+
+    dl = DLRegression()
+    # add to ML registry
+    registry.add_algorithm(endpoint_name="flight_dl",
+                            algorithm_object=dl,
+                            algorithm_name="DL",
+                            algorithm_status="production",
+                            algorithm_version="0.0.1",
+                            owner="Mircea",
+                            algorithm_description="Flight Deep Learning",
+                            algorithm_code=inspect.getsource(DLRegression))
     #registry = MLRegistry() # create ML registry
     # Random Forest classifier
     #rf = RandomForestClassifier()
