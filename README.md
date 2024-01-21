@@ -57,13 +57,8 @@ The application is at:
 Data input prediction:
 
 	{
-	 	"date_of_enquiry": "2023-12-02",
 		"departure": "Bucuresti",
 		"destination": "Istanbul",
-		"flight_date": "2023-12-20",
-		"flight_time": "16:25",
-		"arrival_time": "18:40",
-		"airline": "AF",
-		"layovers": 0,
-		"flight_duration": 75
+		"flight_date": "23-12-2023",
+		"arrival_date": "29-12-2023"
 	}
