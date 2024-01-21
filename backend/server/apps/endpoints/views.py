@@ -13,6 +13,7 @@ from apps.endpoints.serializers import MLAlgorithmStatusSerializer
 from apps.endpoints.models import MLRequest
 from apps.endpoints.serializers import MLRequestSerializer
 
+
 from django.db import transaction
 from apps.endpoints.models import ABTest
 from apps.endpoints.serializers import ABTestSerializer
@@ -24,6 +25,7 @@ from rest_framework import views, status
 from rest_framework.response import Response
 from django.template import loader
 from apps.ml.registry import MLRegistry
+from apps.endpoints.forms import FlightForm
 from server.wsgi import registry
 
 class EndpointViewSet(
@@ -79,9 +81,10 @@ class PredictView(views.APIView):
         algorithm_status = self.request.query_params.get("status", "production")
         algorithm_version = self.request.query_params.get("version")
 
+        print("algorithm_status", algorithm_status, endpoint_name, algorithm_version)
+
         algs = MLAlgorithm.objects.filter(parent_endpoint__name = endpoint_name, status__status = algorithm_status, status__active=True)
 
-        print("endpoint name", endpoint_name, algs)
         if algorithm_version is not None:
             algs = algs.filter(version = algorithm_version)
         message = ''+endpoint_name + " " + str(list(algs))
@@ -209,5 +212,64 @@ class StopABTestView(views.APIView):
         return Response({"message": "AB Test finished.", "summary": summary})
 
 
-class FlightView(TemplateView):
-    template_name = 'flight.html'
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
+from rest_framework.renderers import TemplateHTMLRenderer
+from apps.endpoints.forms import FlightForm
+from datetime import datetime
+
+def FlightView(request):
+    if request.method !='POST':
+        form = FlightForm(None)
+        response = ''
+        return render(request, "flight_page.html", {'form': form, 'response': response})
+
+    if request.method =='POST':
+        form = FlightForm(request.POST)
+    
+        if form.is_valid():
+            # print("request.data", form)
+            algorithm_status = "production"
+            algorithm_version = None
+            endpoint_name = "flight"
+            input_date = datetime.strptime(str(form.cleaned_data["flight_date"]), '%Y-%m-%d')
+            form.cleaned_data["flight_date"] = input_date.strftime('%d-%m-%Y')
+            input_date = datetime.strptime(str(form.cleaned_data["arrival_date"]), '%Y-%m-%d')
+            form.cleaned_data["arrival_date"] = input_date.strftime('%d-%m-%Y')
+
+            algs = MLAlgorithm.objects.filter(parent_endpoint__name = endpoint_name, status__status = algorithm_status, status__active=True)
+
+            if algorithm_version is not None:
+                algs = algs.filter(version = algorithm_version)
+            message = ''+endpoint_name + " " + str(list(algs))
+
+            if len(algs) == 0:
+                print("Eroarea 1")
+                return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+            if len(algs) != 1 and algorithm_status != "ab_testing":
+                print("Eroarea 2")
+                return Response(
+                    {"status": "Error", "message": message + "ML algorithm selection is ambiguous. Please specify algorithm version."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            alg_index = 0
+            if algorithm_status == "ab_testing":
+                alg_index = 0 if rand() < 0.5 else 1
+
+            algorithm_object = registry.endpoints[algs[alg_index].id]
+            prediction = algorithm_object.compute_prediction(form.cleaned_data)
+
+
+            label = prediction["label"] if "label" in prediction else "error"
+            ml_request = MLRequest(
+                input_data=json.dumps(form.cleaned_data),
+                full_response=prediction,
+                response=label,
+                feedback="",
+                parent_mlalgorithm=algs[alg_index],
+            )
+            ml_request.save()
+
+            prediction["request_id"] = ml_request.id
+            
+            return render(request, "flight_page.html", {'form': form, 'response': prediction})
+        return Response({"status": "not good"})
