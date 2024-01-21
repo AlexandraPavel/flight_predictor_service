@@ -42,7 +42,16 @@ then:
 
 	python3 ./manage.py runserver 8000
 
+Backend models:
 
+	flight
+	flight_xgboost
+	flight_dl
+
+
+The application is at: 
+
+	http://127.0.0.1:8080/api/v1/flight_prediction
 
 
 Data input prediction:
