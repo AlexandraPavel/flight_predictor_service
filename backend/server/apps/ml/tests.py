@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-from apps.ml.income_classifier.random_forest import RandomForestClassifier
 from apps.ml.income_classifier.flight_predictor_rfr import RandomForestRegression
 <<<<<<< HEAD
 from apps.ml.income_classifier.flight_predictor_xgb import XGBRegression
@@ -121,11 +120,7 @@ class MLTests(TestCase):
         algorithm_object = RandomForestRegression()
         algorithm_name = "random forest"
         algorithm_status = "production"
-<<<<<<< HEAD
-        algorithm_version = "0.0.3"
-=======
         algorithm_version = "0.0.1"
->>>>>>> main
         algorithm_owner = "Mircea"
         algorithm_description = "Flight random forest"
         algorithm_code = inspect.getsource(RandomForestRegression)
