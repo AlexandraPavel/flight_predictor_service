@@ -14,17 +14,8 @@ import pickle
 class XGBRegression:
     def __init__(self):
         path_to_artifacts = "../../research/"
-        #self.values_fill_missing =  joblib.load(path_to_artifacts + "train_mode.joblib")
-        #self.encoders = joblib.load(path_to_artifacts + "encoders.joblib")
         m = open(path_to_artifacts + 'model_7.pkl','rb')
         self.model = pickle.load(m)
-        #self.model = joblib.load(path_to_artifacts + "random_forest.joblib")
-
-    def postprocessing(self, input_data):
-        label = "<=50K"
-        if input_data[1] > 0.5:
-            label = ">50K"
-        return {"probability": input_data[1], "label": label, "status": "OK"}
 
     def compute_prediction(self, input_data):
         try:

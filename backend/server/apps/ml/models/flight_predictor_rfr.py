@@ -1,6 +1,4 @@
-import joblib
 import pandas as pd
-import keras
 
 import warnings
 from datetime import datetime, timedelta
@@ -12,19 +10,11 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import pickle
 
-class DLRegression:
+class RandomForestRegression:
     def __init__(self):
         path_to_artifacts = "../../research/"
-        #self.values_fill_missing =  joblib.load(path_to_artifacts + "train_mode.joblib")
-        #self.encoders = joblib.load(path_to_artifacts + "encoders.joblib")
-        self.model = keras.models.load_model(path_to_artifacts + 'model_8.keras')
-        #self.model = joblib.load(path_to_artifacts + "random_forest.joblib")
-
-    def postprocessing(self, input_data):
-        label = "<=50K"
-        if input_data[1] > 0.5:
-            label = ">50K"
-        return {"probability": input_data[1], "label": label, "status": "OK"}
+        m = open(path_to_artifacts + 'model_3.pkl','rb')
+        self.model = pickle.load(m)
 
     def compute_prediction(self, input_data):
         try:
@@ -168,6 +158,7 @@ class DLRegression:
 
             airline_list_2 = airline_dict[(ds, dep)][:5]
             airline_condition_2 = [arl.index(x) for x in airline_list_2]
+
             for layover in range(2):
                 for enquiry_days_before in range(20):
                     for dep_hour in [7, 13, 19, 1]:
@@ -219,16 +210,13 @@ class DLRegression:
                                 dictionary = dict(zip(col_list, row))
                                 df_dictionary = pd.DataFrame([dictionary])
                                 dataframe_return_logic = pd.concat([dataframe_return_logic, df_dictionary], ignore_index=True)
-            
+
             dataframe_logic["bias"] = np.ones(shape=(dataframe_logic.shape[0], 1))
             counter = 0
-            
             for col in col_list:
                 dataframe_logic[col] = (dataframe_logic[col] - mean_array[counter]) / std_array[counter]
                 counter += 1
-            
-            dataframe_logic1 = np.asarray(dataframe_logic).astype(np.float32)
-            y_prediction = self.model.predict(dataframe_logic1)
+            y_prediction = self.model.predict(dataframe_logic)
             counter = 0
             for col in col_list:
                 dataframe_logic[col] = dataframe_logic[col] * std_array[counter] + mean_array[counter]
@@ -236,7 +224,7 @@ class DLRegression:
             y_prediction = y_prediction * (y_max - y_min) + y_min
             dataframe_logic["price"] = y_prediction
 
-            
+
 
 
             dataframe_return_logic["bias"] = np.ones(shape=(dataframe_return_logic.shape[0], 1))
@@ -244,8 +232,7 @@ class DLRegression:
             for col in col_list:
                 dataframe_return_logic[col] = (dataframe_return_logic[col] - mean_array[counter2]) / std_array[counter2]
                 counter2 += 1
-            dataframe_return_logic1 = np.asarray(dataframe_return_logic).astype(np.float32)
-            y_return_prediction = self.model.predict(dataframe_return_logic1)
+            y_return_prediction = self.model.predict(dataframe_return_logic)
             y_return_prediction = y_return_prediction * (y_max - y_min) + y_min
             counter2 = 0
             for col in col_list:
@@ -253,13 +240,12 @@ class DLRegression:
                 counter2 += 1
             dataframe_return_logic["price"] = y_return_prediction
 
-            print("da bro")
+
             dataframe_logic = dataframe_logic.sort_values(by=['price'])
             dataframe_return_logic = dataframe_return_logic.sort_values(by=['price'])
 
             time_day_dict = {7:"morning", 13:"day", 19:"evening", 1:"night"}
 
-            print("da bro")
             #print("Our prediction suggest that the best day to purchase a ticket for the " + dep + "-" + ds + " flight would be " + str(int(dataframe_logic.iloc[0]["Enquiry_days_before"])) + " days before the flight, on " + (d1 - timedelta(days = dataframe_logic.iloc[0]["Enquiry_days_before"])).strftime('%d %B %Y'))
             #print("Based on our data, you should be considering " + time_day_dict[dataframe_logic.iloc[0]["Dep_hour"]] + " flights, with " + str(int(dataframe_logic.iloc[0]["layovers"])) + " layovers, from the " + arl[list(dataframe_logic.iloc[0])[10:61].index(1) + 1] + " airline.")
             #print("You should expect to pay around " + str(int(dataframe_logic.iloc[0]["price"])) + " euros.")

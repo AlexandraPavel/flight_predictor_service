@@ -25,42 +25,6 @@ class MLAlgorithmStatus(models.Model):
     parent_mlalgorithm = models.ForeignKey(MLAlgorithm, on_delete=models.CASCADE, related_name = "status")
 
 
-class Flight(models.Model):
-    
-    DEPARTURE_CHOICES = (
-        ('Bucuresti', 'Bucuresti'),
-        ('Iasi', 'Iasi'),
-        ('Cluj', 'Cluj'),
-    )
-
-    DESTINATION_CHOICES = (
-        ('Istanbul', 'Istanbul'),
-        ('Londra', 'Londra'),
-        ('Paris', 'Paris'),
-        ('Amsterdam', 'Amsterdam'),
-        ('Madrid', 'Madrid'),
-        ('Frankfurt', 'Frankfurt'),
-        ('Barcelona', 'Barcelona'),
-        ('Munich', 'Munich'),
-        ('Roma', 'Roma'),
-        ('Lisabona', 'Lisabona'),
-        ('Dublin', 'Dublin'),
-        ('Viena', 'Viena'),
-        ('Manchester', 'Manchester'),
-        ('Atena', 'Atena'),
-        ('Zurich', 'Zurich'),
-        ('Oslo', 'Oslo'),
-        ('Copenhaga', 'Copenhaga'),
-        ('Milano', 'Milano'),
-        ('Berlin', 'Berlin'),
-        ('Bruxelles', 'Bruxelles'),
-    )
-
-    departure = models.CharField(max_length=128, blank = False, null = False, choices = DEPARTURE_CHOICES)
-    destination = models.CharField(max_length=128, blank = False, null = False, choices = DESTINATION_CHOICES)
-    flight_date = models.DateField(blank = False, null = False)
-    arrival_date = models.DateField(blank=False, null = False)
-
 class MLRequest(models.Model):
 
     input_data = models.CharField(max_length=10000)
@@ -69,15 +33,3 @@ class MLRequest(models.Model):
     feedback = models.CharField(max_length=10000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     parent_mlalgorithm = models.ForeignKey(MLAlgorithm, on_delete=models.CASCADE)
-
-
-class ABTest(models.Model):
-
-    title = models.CharField(max_length=10000)
-    created_by = models.CharField(max_length=128)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    ended_at = models.DateTimeField(blank=True, null=True)
-    summary = models.CharField(max_length=10000, blank=True, null=True)
-
-    parent_mlalgorithm_1 = models.ForeignKey(MLAlgorithm, on_delete=models.CASCADE, related_name="parent_mlalgorithm_1")
-    parent_mlalgorithm_2 = models.ForeignKey(MLAlgorithm, on_delete=models.CASCADE, related_name="parent_mlalgorithm_2")

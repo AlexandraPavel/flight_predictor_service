@@ -7,14 +7,12 @@ application = get_wsgi_application()
 # ML registry
 import inspect
 from apps.ml.registry import MLRegistry
-from apps.ml.income_classifier.flight_predictor_rfr import RandomForestRegression
-from apps.ml.income_classifier.flight_predictor_xgb import XGBRegression
-from apps.ml.income_classifier.flight_predictor_dl import DLRegression
-# from apps.ml.income_classifier.extra_trees import ExtraTreesClassifier # import ExtraTrees ML algorithm
-
+from apps.ml.models.flight_predictor_rfr import RandomForestRegression
+from apps.ml.models.flight_predictor_xgb import XGBRegression
+from apps.ml.models.flight_predictor_dl import DLRegression
 try:
     registry = MLRegistry() # create ML registry
-    # Random Forest classifier
+    # Random Forest model
     rf = RandomForestRegression()
     # add to ML registry
     registry.add_algorithm(endpoint_name="flight",
