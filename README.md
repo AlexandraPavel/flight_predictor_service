@@ -11,15 +11,7 @@ Put more memory in the docker desktop settings in order to train the model:
 	swap: 1gb
 	virtual disk limit: 64GB
 
-Training of the model can be done on google colab using
-
-	research/train_flight_classifier.ipynb
-
-and
-
-	research/flight_training.py
-
-or it can be done in the container (enviroment settings are included)
+Training of the model was done in colab: https://github.com/AlexandraPavel/PriceFlightEstimator
 
 Before starting the development in .devcontainer, run:
 
