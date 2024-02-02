@@ -52,7 +52,6 @@ def FlightPredict(request):
         algorithm_object = registry.endpoints[algs[alg_index].id]
         prediction = algorithm_object.compute_prediction(form)
 
-
         label = prediction["label"] if "label" in prediction else "error"
         ml_request = MLRequest(
             input_data=json.dumps(form),
