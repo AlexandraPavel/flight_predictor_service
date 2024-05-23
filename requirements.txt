@@ -1,0 +1,13 @@
+Django
+django-filter
+djangorestframework
+django-bootstrap3
+scikit-learn=1.2.2
+Markdown
+requests
+joblib
+tensorflow
+numpy
+pandas
+requests
+gunicorn
